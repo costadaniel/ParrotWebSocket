@@ -15,7 +15,7 @@ Foram utilizadas bibliotecas para a criação do projeto, com o intuito de facil
 
 Foi utilizado também o [Reactotron](https://github.com/infinitered/reactotron "Reactotron") para ajudar com o debug da aplicação e correção de erros. A aplicação segue o [template básico da Rocket Seat](https://github.com/Rocketseat/react-native-template-rocketseat-basic "template básico da Rocket Seat") ondem vem várias coisas configuradas como o Eslint o Babel e o Babel Plugin Root Import.
 
-## Como buildar e rodar a aplicação
+## Como baixar e executar a aplicação
 
 ```
 $ git clone https://github.com/costadaniel/ParrotWebSocket.git
