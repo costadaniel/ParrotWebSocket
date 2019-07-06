@@ -22,20 +22,7 @@ class Main extends Component {
   }
 
   state = {
-    messages: [
-      {
-        timeStamp: '1234',
-        time: '12:34',
-        sender: 'user',
-        data: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae et accusantium deleniti dolorem quia ullam ab vel debitis veritatis alias.',
-      },
-      {
-        timeStamp: '1235',
-        time: '12:34',
-        sender: 'parrot',
-        data: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae et accusantium deleniti dolorem quia ullam ab vel debitis veritatis alias.',
-      },
-    ],
+    messages: [],
     messageText: '',
   };
 
