@@ -18,6 +18,8 @@ Foi utilizado também o [Reactotron](https://github.com/infinitered/reactotron "
 ## Como buildar e rodar a aplicação
 
 ```
+$ git clone https://github.com/costadaniel/ParrotWebSocket.git
+$ cd ParrotWebSocket
 $ yarn
 $ react-native run-android // ou react-native run-ios
 ```
