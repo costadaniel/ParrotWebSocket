@@ -1,59 +1,126 @@
-import React from 'react';
+import React, { Component } from 'react';
 
+// Biblioteca para icones
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+// Os componentes da aplicação são construidos utilizando Styled Components
 import {
-  Text, Image, StyleSheet, Dimensions, ImageBackground, StatusBar,
-} from 'react-native';
+  Container, Chat, InputContainer, MessageInput, SendButton,
+} from './styles';
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  fileName: {
-    fontWeight: 'bold',
-    marginTop: 5,
-  },
-  instructions: {
-    color: '#DDD',
-    fontSize: 14,
-    marginTop: 20,
-    textAlign: 'center',
-  },
-  logo: {
-    height: Dimensions.get('window').height * 0.11,
-    marginVertical: Dimensions.get('window').height * 0.11,
-    width: Dimensions.get('window').height * 0.11 * (1950 / 662),
-  },
-  welcome: {
-    color: '#fff',
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
+// Componentes que podem se repetir durante toda a aplicação, ou componentes mais complexos
+import Header from '~/components/Header';
+import Message from '~/components/Message';
 
-const Main = () => (
-  <ImageBackground
-    source={{
-      uri: 'https://s3-sa-east-1.amazonaws.com/rocketseat-cdn/background.png',
-    }}
-    style={styles.container}
-    resizeMode="cover"
-  >
-    <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
-    <Image
-      source={{
-        uri: 'https://s3-sa-east-1.amazonaws.com/rocketseat-cdn/rocketseat_logo.png',
-      }}
-      style={styles.logo}
-      resizeMode="contain"
-    />
-    <Text style={styles.welcome}>Bem-vindo ao Template Básico!</Text>
-    <Text style={styles.instructions}>Essa é a tela principal da sua aplicação =)</Text>
-    <Text style={styles.instructions}>Você pode editar a tela no arquivo:</Text>
-    <Text style={[styles.instructions, styles.fileName]}>src/pages/Main/index.js</Text>
-  </ImageBackground>
-);
+class Main extends Component {
+  constructor() {
+    super();
+
+    // Conectando com o WebSocket
+    // eslint-disable-next-line no-undef
+    this.ws = new WebSocket('wss://echo.websocket.org');
+  }
+
+  state = {
+    messages: [
+      {
+        timeStamp: '1234',
+        time: '12:34',
+        sender: 'user',
+        data: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae et accusantium deleniti dolorem quia ullam ab vel debitis veritatis alias.',
+      },
+      {
+        timeStamp: '1235',
+        time: '12:34',
+        sender: 'parrot',
+        data: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae et accusantium deleniti dolorem quia ullam ab vel debitis veritatis alias.',
+      },
+    ],
+    messageText: '',
+  };
+
+  componentDidMount() {
+    this.ws.onopen = () => {};
+
+    this.ws.onmessage = ({ data }) => {
+      this.receiveMessage(data);
+    };
+  }
+
+  sendMessage = () => {
+    const { messageText } = this.state;
+    const date = new Date();
+
+    const message = {
+      // Configurando o timestamp que vai ser utilizado como id dentro da FlatList
+      timeStamp: date.toJSON(),
+      time:
+        date.getHours() < 10
+          ? `0${date.getHours()}:${
+            date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+          }`
+          : `${date.getHours()}:${
+            date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+          }`,
+      sender: 'user',
+      data: messageText,
+    };
+
+    this.ws.send(messageText);
+
+    this.setState(prevState => ({
+      messages: [...prevState.messages, message],
+      messageText: '',
+    }));
+  };
+
+  receiveMessage = (data) => {
+    const date = new Date();
+
+    const message = {
+      timeStamp: date.toJSON(),
+      time:
+        date.getHours() < 10
+          ? `0${date.getHours()}:${
+            date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+          }`
+          : `${date.getHours()}:${
+            date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+          }`,
+      sender: 'parrot',
+      data,
+    };
+
+    this.setState(prevState => ({
+      messages: [...prevState.messages, message],
+    }));
+  };
+
+  render() {
+    const { messages, messageText } = this.state;
+
+    return (
+      <Container>
+        <Header title="Parrot Web Socket" />
+        <Chat
+          data={messages}
+          keyExtractor={message => String(message.timeStamp)}
+          renderItem={({ item: message }) => <Message message={message} />}
+        />
+        <InputContainer>
+          <MessageInput
+            multiline
+            placeholder="Digite sua mensagem aqui..."
+            value={messageText}
+            onChangeText={text => this.setState({ messageText: text })}
+          />
+          <SendButton onPress={messageText !== '' ? this.sendMessage : null}>
+            <Icon name="send" size={18} color="#FFF" />
+          </SendButton>
+        </InputContainer>
+      </Container>
+    );
+  }
+}
 
 export default Main;
