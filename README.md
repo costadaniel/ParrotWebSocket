@@ -2,6 +2,8 @@
 
 Página contendo informações sobre o desafio entregue:
 
+O desafio consiste em enviar mensagens via WebSocket a 'wss://echo.websocket.org' como se fosse um chat e receber as respostas também como se fosse chat. O aplicativo simula um chat utilizando WebSocket.
+
 ## Bibliotecas utilizadas:
 
 Foram utilizadas bibliotecas para a criação do projeto, com o intuito de facilitar o seu desenvolvimento e escalabilidade futura caso fosse necessário:
